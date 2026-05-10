@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Andrew Cotaj — AI Safety & Quantitative Systems</title>
+<meta name="description" content="Andrew Cotaj — Computer Science at Notre Dame. Research on agentic AI safety, secure ML systems, and quantitative deep-learning for financial markets." />
+<meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#09090B" media="(prefers-color-scheme: dark)" />
+
+<meta property="og:title" content="Andrew Cotaj — AI Safety & Quantitative Systems" />
+<meta property="og:description" content="CS at Notre Dame. Research on agentic AI safety, secure ML systems, and quantitative deep-learning." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script>
+  // Apply theme before paint to avoid flash
+  (function () {
+    try {
+      var stored = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var dark = stored ? stored === 'dark' : prefersDark;
+      if (dark) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  })();
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          bg:      'rgb(var(--bg) / <alpha-value>)',
+          fg:      'rgb(var(--fg) / <alpha-value>)',
+          muted:   'rgb(var(--muted) / <alpha-value>)',
+          subtle:  'rgb(var(--subtle) / <alpha-value>)',
+          line:    'rgb(var(--line) / <alpha-value>)',
+          accent:  'rgb(var(--accent) / <alpha-value>)',
+          ok:      'rgb(var(--ok) / <alpha-value>)',
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        },
+        letterSpacing: {
+          tightest: '-0.04em',
+        },
+        maxWidth: {
+          page: '72rem',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  :root {
+    --bg:     250 250 250;
+    --fg:       9   9  11;
+    --muted:   82  82  91;
+    --subtle: 244 244 245;
+    --line:   228 228 231;
+    --accent:  37  99 235;
+    --ok:      22 163  74;
+  }
+  .dark {
+    --bg:       9   9  11;
+    --fg:     250 250 250;
+    --muted:  161 161 170;
+    --subtle:  24  24  27;
+    --line:    39  39  42;
+    --accent:  96 165 250;
+    --ok:      74 222 128;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible, accessible focus rings on every interactive element */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgb(var(--accent) / 0.2);
+    color: rgb(var(--fg));
+  }
+
+  /* Reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Status dot pulse */
+  .status-dot {
+    position: relative;
+  }
+  .status-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: rgb(var(--ok));
+    opacity: 0.5;
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { transform: scale(1);   opacity: 0.5; }
+    80%  { transform: scale(2.6); opacity: 0; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+
+  /* Underline animation for nav links */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 220ms ease-out;
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  /* Project / experience cards */
+  .card {
+    transition: border-color 220ms ease-out, background-color 220ms ease-out, transform 220ms ease-out;
+  }
+  .card:hover {
+    border-color: rgb(var(--fg) / 0.4);
+  }
+  .dark .card:hover {
+    border-color: rgb(var(--fg) / 0.4);
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+    .status-dot::after { display: none; }
+  }
+</style>
+</head>
+<body class="bg-bg text-fg font-sans antialiased">
+
+<!-- Skip link -->
+<a href="#main"
+   class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-bg focus:text-fg focus:border focus:border-line focus:px-3 focus:py-2 focus:font-mono focus:text-xs">
+  Skip to content
+</a>
+
+<!-- Top navigation -->
+<header class="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
+  <nav class="mx-auto max-w-page px-5 sm:px-8 h-14 flex items-center justify-between" aria-label="Primary">
+    <a href="#top" class="font-mono text-sm tracking-tight cursor-pointer hover:text-accent transition-colors duration-200">
+      <span aria-hidden="true">A.</span>Cotaj
+    </a>
+    <ul class="hidden md:flex items-center gap-7 font-mono text-xs uppercase tracking-widest text-muted">
+      <li><a href="#about"      class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">About</a></li>
+      <li><a href="#experience" class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Work</a></li>
+      <li><a href="#projects"   class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Projects</a></li>
+      <li><a href="#skills"     class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Skills</a></li>
+      <li><a href="#contact"    class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Contact</a></li>
+    </ul>
+    <button id="theme-toggle" type="button"
+            class="cursor-pointer h-9 w-9 grid place-items-center border border-line rounded-sm text-muted hover:text-fg hover:border-fg/40 transition-colors duration-200"
+            aria-label="Toggle color theme">
+      <!-- Sun (visible in dark mode) -->
+      <svg class="hidden dark:block" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+      <!-- Moon (visible in light mode) -->
+      <svg class="block dark:hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="top" aria-labelledby="hero-heading" class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
+
+      <!-- Status -->
+      <div class="reveal flex items-center gap-3 mb-10 sm:mb-14">
+        <span class="status-dot inline-block h-1.5 w-1.5 rounded-full bg-ok" aria-hidden="true"></span>
+        <span class="font-mono text-xs uppercase tracking-widest text-muted">
+          Available May 2026 &nbsp;·&nbsp; Notre Dame CS
+        </span>
+      </div>
+
+      <h1 id="hero-heading"
+          class="reveal font-sans font-light tracking-tightest leading-[0.95]
+                 text-[clamp(2.75rem,9vw,7.5rem)]">
+        Andrew<br/>Cotaj
+      </h1>
+
+      <p class="reveal mt-10 sm:mt-12 max-w-2xl text-xl sm:text-2xl leading-snug text-fg/90">
+        <span class="text-fg">AI Safety &amp; Quantitative Systems.</span>
+        <span class="text-muted">
+          Building AI infrastructure that is secure, aligned, and economically useful —
+          and deep-learning systems for financial markets.
+        </span>
+      </p>
+
+      <!-- CTAs -->
+      <div class="reveal mt-10 sm:mt-12 flex flex-wrap gap-3">
+        <a href="mailto:ajcotaj@gmail.com"
+           class="cursor-pointer inline-flex items-center gap-2 px-4 h-11 bg-fg text-bg font-medium text-sm rounded-sm hover:bg-accent transition-colors duration-200">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M22 7L12 13 2 7"/>
+          </svg>
+          Email me
+        </a>
+        <a href="https://github.com/Ajcotaj" target="_blank" rel="noopener"
+           class="cursor-pointer inline-flex items-center gap-2 px-4 h-11 border border-line text-fg font-medium text-sm rounded-sm hover:border-fg/50 transition-colors duration-200">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.93c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.74-1.56-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.3 1.18-3.1-.12-.3-.51-1.48.11-3.07 0 0 .96-.31 3.16 1.18a10.94 10.94 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.59.23 2.77.11 3.07.74.8 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.26 5.69.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/in/andrew-cotaj" target="_blank" rel="noopener"
+           class="cursor-pointer inline-flex items-center gap-2 px-4 h-11 border border-line text-fg font-medium text-sm rounded-sm hover:border-fg/50 transition-colors duration-200">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.62 0 4.29 2.38 4.29 5.48v6.26zM5.34 7.43A2.06 2.06 0 1 1 5.34 3.3a2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.28V1.72C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+          LinkedIn
+        </a>
+        <a href="resume.pdf" download
+           class="cursor-pointer inline-flex items-center gap-2 px-4 h-11 border border-line text-fg font-medium text-sm rounded-sm hover:border-fg/50 transition-colors duration-200">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Resume
+        </a>
+      </div>
+
+      <!-- Hero metadata strip -->
+      <dl class="reveal mt-16 sm:mt-24 grid grid-cols-2 sm:grid-cols-4 gap-y-6 gap-x-8 border-t border-line pt-8 font-mono text-xs">
+        <div>
+          <dt class="uppercase tracking-widest text-muted">Location</dt>
+          <dd class="mt-1 text-fg">Notre Dame, IN</dd>
+        </div>
+        <div>
+          <dt class="uppercase tracking-widest text-muted">Graduating</dt>
+          <dd class="mt-1 text-fg">May 2026 &nbsp;·&nbsp; GPA 3.76</dd>
+        </div>
+        <div>
+          <dt class="uppercase tracking-widest text-muted">Focus</dt>
+          <dd class="mt-1 text-fg">Agentic safety, quant ML</dd>
+        </div>
+        <div>
+          <dt class="uppercase tracking-widest text-muted">Open to</dt>
+          <dd class="mt-1 text-fg">Research &amp; engineering roles</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+
+  <!-- ABOUT -->
+  <section id="about" aria-labelledby="about-heading" class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-12 gap-x-8 gap-y-10">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 01 / About</p>
+      </div>
+      <div class="lg:col-span-9 reveal">
+        <h2 id="about-heading" class="text-2xl sm:text-3xl font-medium tracking-tight text-fg max-w-2xl">
+          Final-year CS student at Notre Dame researching how to build AI systems that are <em class="not-italic text-accent">secure</em>, <em class="not-italic text-accent">aligned</em>, and <em class="not-italic text-accent">economically useful</em>.
+        </h2>
+        <div class="mt-8 space-y-5 text-fg/85 text-base sm:text-lg leading-relaxed max-w-2xl">
+          <p>
+            I work at the Notre Dame Security &amp; Software Engineering Lab on agentic
+            safety — model serialization vulnerabilities, adversarial robustness in NLP,
+            and the migration paths off unsafe object formats.
+          </p>
+          <p>
+            Previously I engineered AI-driven developer tooling at ASML; a single
+            performance-evaluation service I built increased team throughput by
+            <span class="font-mono">107%</span> and was slated for company-wide rollout.
+          </p>
+          <p>
+            Outside research, I build transformer language models from scratch and
+            quantitative trading systems — currently a <span class="font-mono">C++</span>
+            HFT execution engine and a GRU-based volatility model in PyTorch.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- EXPERIENCE -->
+  <section id="experience" aria-labelledby="experience-heading" class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-12 gap-x-8 gap-y-10">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 02 / Experience</p>
+        <h2 id="experience-heading" class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Selected work.</h2>
+      </div>
+
+      <div class="lg:col-span-9 space-y-4">
+
+        <!-- ASML -->
+        <article class="reveal card group border border-line p-6 sm:p-8 rounded-sm bg-bg">
+          <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-medium tracking-tight">
+                Software Engineering Intern
+                <span class="text-muted font-light">— ASML</span>
+              </h3>
+              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted">
+                Wilton, CT &nbsp;·&nbsp; Semiconductor Manufacturing
+              </p>
+            </div>
+            <p class="font-mono text-xs uppercase tracking-widest text-muted">
+              May — Aug 2025
+            </p>
+          </header>
+
+          <ul class="mt-5 space-y-2.5 text-fg/85 leading-relaxed text-[0.95rem]">
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Built a Python performance-evaluation tool on the GitHub API,
+                deployed as a backend service with a web interface for engineering managers.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Increased team throughput by
+                <span class="font-mono text-fg">107%</span>;
+                tool slated for company-wide rollout across engineering orgs.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Collaborated with backend teams in semiconductor manufacturing
+                on low-latency integration with internal pipelines.</span>
+            </li>
+          </ul>
+
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Python</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">GitHub API</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Backend services</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Developer tools</span>
+          </div>
+        </article>
+
+        <!-- ND Lab -->
+        <article class="reveal card group border border-line p-6 sm:p-8 rounded-sm bg-bg">
+          <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-medium tracking-tight">
+                Research Assistant
+                <span class="text-muted font-light">— ND Security &amp; Software Engineering Lab</span>
+              </h3>
+              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted">
+                University of Notre Dame &nbsp;·&nbsp; Agentic AI Safety
+              </p>
+            </div>
+            <p class="font-mono text-xs uppercase tracking-widest text-muted">
+              Aug 2024 — Present
+            </p>
+          </header>
+
+          <ul class="mt-5 space-y-2.5 text-fg/85 leading-relaxed text-[0.95rem]">
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Researching model serialization vulnerabilities
+                (<span class="font-mono text-fg">pickle</span>,
+                <span class="font-mono text-fg">torch.save</span>) and the
+                migration to <span class="font-mono text-fg">safetensors</span>
+                to prevent object-injection attacks across the ML supply chain.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Co-developing <span class="font-mono text-fg">TITAN</span>,
+                a hybrid quantum-ML framework using Projected Quantum Kernels
+                (Qiskit) + SVM for adversarial-attack detection in NLP.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Systematic survey of C-to-Rust transpilation tools — evaluating
+                semantic preservation and memory-safety guarantees.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Empirical analysis of Quantum Programming Languages.</span>
+            </li>
+          </ul>
+
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">PyTorch</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Qiskit</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Rust</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Adversarial robustness</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">ML supply chain</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PROJECTS -->
+  <section id="projects" aria-labelledby="projects-heading" class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28">
+
+      <div class="reveal grid lg:grid-cols-12 gap-x-8 mb-12 sm:mb-16">
+        <div class="lg:col-span-3">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 03 / Projects</p>
+        </div>
+        <div class="lg:col-span-9">
+          <h2 id="projects-heading" class="text-2xl sm:text-3xl font-medium tracking-tight max-w-2xl">
+            Independent work — language models, low-latency systems, and quantitative trading.
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid gap-px bg-line border border-line rounded-sm overflow-hidden md:grid-cols-2">
+
+        <!-- MiniGPT -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Notre Dame &nbsp;·&nbsp; Jan 2026 — Present
+            </p>
+            <span class="font-mono text-[11px] text-muted">01</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            MiniGPT — Transformer LM from Scratch
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            From-the-ground-up implementation of a decoder-only transformer:
+            tokenization, multi-head attention, backprop, and training pipelines.
+            RAG-based generation; bias and alignment evaluation.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">PyTorch</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Transformers</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">RAG</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Alignment eval</span>
+          </div>
+        </article>
+
+        <!-- HFT Engine -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Notre Dame &nbsp;·&nbsp; Jan 2026 — Present
+            </p>
+            <span class="font-mono text-[11px] text-muted">02</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            C++ HFT Execution &amp; Backtesting Engine
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            Low-latency C++ trading system with a Limit Order Book.
+            Implements market-making and arbitrage strategies in a simulated exchange,
+            with deterministic event-driven backtesting.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">C++</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Limit Order Book</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Market making</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Low-latency systems</span>
+          </div>
+        </article>
+
+        <!-- GRU Volatility -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Independent &nbsp;·&nbsp; Aug 2025 — Present
+            </p>
+            <span class="font-mono text-[11px] text-muted">03</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            GRU Volatility Forecasting Model
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            PyTorch GRU on financial time-series; mean-reversion signals derived from
+            forecasted volatility. Sharpe-optimized backtesting with explicit
+            downside-volatility penalties.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">PyTorch</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">GRU</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Time-series</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Sharpe optimization</span>
+          </div>
+        </article>
+
+        <!-- Equity Portfolio -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Independent &nbsp;·&nbsp; Jul 2022 — Present
+            </p>
+            <span class="font-mono text-[11px] text-muted">04</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            Independent Equity Portfolio
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            <span class="font-mono text-fg">135.71%</span> cumulative return
+            (<span class="font-mono text-fg">&gt;32%</span> annualized),
+            outperforming the S&amp;P 500 via a blend of fundamental and
+            technical analysis on a discretionary thesis-driven basis.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Equities</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Fundamental analysis</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Technical analysis</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Risk management</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SKILLS -->
+  <section id="skills" aria-labelledby="skills-heading" class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-12 gap-x-8 gap-y-10">
+
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 04 / Skills</p>
+        <h2 id="skills-heading" class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Stack.</h2>
+      </div>
+
+      <div class="lg:col-span-9 grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-x-8 gap-y-10 reveal">
+
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            Languages
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>Python</li>
+            <li>C++</li>
+            <li>C</li>
+            <li>Rust</li>
+            <li>JavaScript</li>
+            <li>SQL</li>
+            <li>Java</li>
+            <li>MATLAB</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            AI / ML
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>PyTorch</li>
+            <li>TensorFlow</li>
+            <li>scikit-learn</li>
+            <li>pandas · NumPy</li>
+            <li>Anthropic SDK</li>
+            <li>RAG</li>
+            <li>Transformers</li>
+            <li>Adversarial robustness</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            Systems &amp; Security
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>Linux / Unix</li>
+            <li>Wireshark</li>
+            <li>Git</li>
+            <li>Shell</li>
+            <li>safetensors</li>
+            <li>Memory-safe Rust</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            Quant
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>Time-series forecasting</li>
+            <li>Sharpe optimization</li>
+            <li>Statistical anomaly detection</li>
+            <li>Backtesting</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CONTACT -->
+  <section id="contact" aria-labelledby="contact-heading">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28">
+      <div class="reveal grid lg:grid-cols-12 gap-x-8 gap-y-10">
+
+        <div class="lg:col-span-3">
+          <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 05 / Contact</p>
+        </div>
+
+        <div class="lg:col-span-9">
+          <h2 id="contact-heading"
+              class="font-light tracking-tightest leading-[1] text-[clamp(2.25rem,6vw,4.5rem)]">
+            Let's build something
+            <span class="text-accent">aligned</span>.
+          </h2>
+          <p class="mt-6 text-fg/80 text-lg max-w-xl leading-relaxed">
+            Open to research and engineering opportunities at AI labs, quant firms,
+            and security-focused teams starting May 2026. I read everything.
+          </p>
+
+          <ul class="mt-10 space-y-px border-y border-line font-mono text-sm">
+            <li class="border-b border-line">
+              <a href="mailto:ajcotaj@gmail.com"
+                 class="cursor-pointer flex items-center justify-between py-4 hover:text-accent transition-colors duration-200">
+                <span class="flex items-center gap-4">
+                  <span class="uppercase tracking-widest text-muted text-xs w-20">Email</span>
+                  <span>ajcotaj@gmail.com</span>
+                </span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="7" y1="17" x2="17" y2="7"/>
+                  <polyline points="7 7 17 7 17 17"/>
+                </svg>
+              </a>
+            </li>
+            <li class="border-b border-line">
+              <a href="https://linkedin.com/in/andrew-cotaj" target="_blank" rel="noopener"
+                 class="cursor-pointer flex items-center justify-between py-4 hover:text-accent transition-colors duration-200">
+                <span class="flex items-center gap-4">
+                  <span class="uppercase tracking-widest text-muted text-xs w-20">LinkedIn</span>
+                  <span>/in/andrew-cotaj</span>
+                </span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="7" y1="17" x2="17" y2="7"/>
+                  <polyline points="7 7 17 7 17 17"/>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/Ajcotaj" target="_blank" rel="noopener"
+                 class="cursor-pointer flex items-center justify-between py-4 hover:text-accent transition-colors duration-200">
+                <span class="flex items-center gap-4">
+                  <span class="uppercase tracking-widest text-muted text-xs w-20">GitHub</span>
+                  <span>@Ajcotaj</span>
+                </span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="7" y1="17" x2="17" y2="7"/>
+                  <polyline points="7 7 17 7 17 17"/>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line">
+  <div class="mx-auto max-w-page px-5 sm:px-8 py-8 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-widest text-muted">
+    <p>© <span id="year">2026</span> &nbsp;·&nbsp; Andrew Cotaj</p>
+    <p>Built with HTML &amp; Tailwind &nbsp;·&nbsp; No tracking</p>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var root = document.documentElement;
+      var isDark = root.classList.toggle('dark');
+      try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) {}
+    });
+  })();
+
+  // Scroll reveal — disabled if reduced-motion preferred
+  (function () {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduced || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
+  // Year
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
