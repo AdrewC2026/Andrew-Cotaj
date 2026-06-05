@@ -179,11 +179,13 @@
       <span aria-hidden="true">A.</span>Cotaj
     </a>
     <ul class="hidden md:flex items-center gap-7 font-mono text-xs uppercase tracking-widest text-muted">
-      <li><a href="#about"      class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">About</a></li>
-      <li><a href="#experience" class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Work</a></li>
-      <li><a href="#projects"   class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Projects</a></li>
-      <li><a href="#skills"     class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Skills</a></li>
-      <li><a href="#contact"    class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Contact</a></li>
+      <li><a href="#about"       class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">About</a></li>
+      <li><a href="#experience"  class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Work</a></li>
+      <li><a href="#projects"    class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Projects</a></li>
+      <li><a href="#education"   class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Education</a></li>
+      <li><a href="#skills"      class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Skills</a></li>
+      <li><a href="#involvement" class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Involvement</a></li>
+      <li><a href="#contact"     class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Contact</a></li>
     </ul>
     <button id="theme-toggle" type="button"
             class="cursor-pointer h-9 w-9 grid place-items-center border border-line rounded-sm text-muted hover:text-fg hover:border-fg/40 transition-colors duration-200"
@@ -349,19 +351,27 @@
           <ul class="mt-5 space-y-2.5 text-fg/85 leading-relaxed text-[0.95rem]">
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
-              <span>Built a Python performance-evaluation tool on the GitHub API,
-                deployed as a backend service with a web interface for engineering managers.</span>
+              <span>Built a Python performance-evaluation tool on the GitHub API to
+                collect, filter, and organize code-review data — deployed as a workflow
+                pipeline + backend service with a web-app interface, applying DevOps
+                practices for scalability and reliability.</span>
             </li>
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
               <span>Increased team throughput by
                 <span class="font-mono text-fg">107%</span>;
-                tool slated for company-wide rollout across engineering orgs.</span>
+                tool on track for company-wide implementation following a
+                cost-benefit analysis for deployment.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
+              <span>Operationalized high-usage AI backend services and bridged
+                code-review data to business intelligence.</span>
             </li>
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
               <span>Collaborated with backend teams in semiconductor manufacturing
-                on low-latency integration with internal pipelines.</span>
+                to ensure low-latency integration with existing systems.</span>
             </li>
           </ul>
 
@@ -384,6 +394,10 @@
               <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted">
                 University of Notre Dame &nbsp;·&nbsp; Agentic AI Safety
               </p>
+              <p class="mt-1 font-mono text-xs tracking-wide text-muted/80">
+                4 semesters of undergraduate research (CSE 48901) under
+                Prof. Joanna Cecilia da Silva Santos.
+              </p>
             </div>
             <p class="font-mono text-xs uppercase tracking-widest text-muted">
               Aug 2024 — Present
@@ -393,26 +407,31 @@
           <ul class="mt-5 space-y-2.5 text-fg/85 leading-relaxed text-[0.95rem]">
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
-              <span>Researching model serialization vulnerabilities
+              <span>Researched model serialization formats (Hugging Face), focusing on
+                the shift from unsafe formats
                 (<span class="font-mono text-fg">pickle</span>,
-                <span class="font-mono text-fg">torch.save</span>) and the
-                migration to <span class="font-mono text-fg">safetensors</span>
-                to prevent object-injection attacks across the ML supply chain.</span>
+                <span class="font-mono text-fg">torch.save</span>) to
+                <span class="font-mono text-fg">safetensors</span>, resistant to
+                object-injection attacks across the ML supply chain.</span>
             </li>
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
-              <span>Co-developing <span class="font-mono text-fg">TITAN</span>,
-                a hybrid quantum-ML framework using Projected Quantum Kernels
-                (Qiskit) + SVM for adversarial-attack detection in NLP.</span>
+              <span>Assisted development of <span class="font-mono text-fg">TITAN</span>,
+                a hybrid quantum-ML framework using Projected Quantum Kernels (Qiskit)
+                to generate quantum-enhanced features and train an SVM for adversarial-attack
+                detection in NLP models — including adversarial dataset construction and
+                benchmarking against SOTA detectors.</span>
             </li>
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
-              <span>Systematic survey of C-to-Rust transpilation tools — evaluating
-                semantic preservation and memory-safety guarantees.</span>
+              <span>Systematic survey of C-to-Rust transpilation techniques — evaluating
+                tools, semantic preservation, and memory-safety guarantees
+                (targeted for publication).</span>
             </li>
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
-              <span>Empirical analysis of Quantum Programming Languages.</span>
+              <span>Empirical analysis of Quantum Programming Languages (QPL) —
+                language features, adoption, and applicability.</span>
             </li>
           </ul>
 
@@ -440,7 +459,8 @@
         </div>
         <div class="lg:col-span-9">
           <h2 id="projects-heading" class="text-2xl sm:text-3xl font-medium tracking-tight max-w-2xl">
-            Independent work — language models, low-latency systems, and quantitative trading.
+            Independent work — language models, low-latency trading systems, and
+            quantitative microstructure research.
           </h2>
         </div>
       </div>
@@ -459,15 +479,19 @@
             MiniGPT — Transformer LM from Scratch
           </h3>
           <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
-            From-the-ground-up implementation of a decoder-only transformer:
-            tokenization, multi-head attention, backprop, and training pipelines.
-            RAG-based generation; bias and alignment evaluation.
+            From-the-ground-up decoder-only transformer: tokenization, attention,
+            backprop, and training pipelines. Implements foundational AI/ML algorithms
+            — uninformed/informed search, logistic regression, SVMs, clustering, PCA,
+            CNNs, RNNs, reinforcement learning — plus end-to-end generative workflows:
+            prompt engineering, RAG, context optimization, model evaluation, bias
+            analysis, and agent-based task orchestration.
           </p>
           <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">PyTorch</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">scikit-learn</span>
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Transformers</span>
-            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">RAG</span>
-            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Alignment eval</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">RAG · agents</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Bias / alignment eval</span>
           </div>
         </article>
 
@@ -483,15 +507,17 @@
             C++ HFT Execution &amp; Backtesting Engine
           </h3>
           <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
-            Low-latency C++ trading system with a Limit Order Book.
-            Implements market-making and arbitrage strategies in a simulated exchange,
-            with deterministic event-driven backtesting.
+            Low-latency C++ trading system: Limit Order Book + order-management logic
+            for high-throughput market data. Automated market-making and arbitrage
+            strategies in a simulated exchange, competing against rival algorithms to
+            maximize PnL and execution speed. Performance optimization via advanced
+            networking for high-speed data capture; backtesting and post-trade analysis.
           </p>
           <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">C++</span>
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Limit Order Book</span>
-            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Market making</span>
-            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Low-latency systems</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Market making · arbitrage</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Low-latency networking</span>
           </div>
         </article>
 
@@ -504,12 +530,14 @@
             <span class="font-mono text-[11px] text-muted">03</span>
           </header>
           <h3 class="mt-4 text-xl font-medium tracking-tight">
-            GRU Volatility Forecasting Model
+            GRU Volatility / Short-Selling Model
           </h3>
           <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
-            PyTorch GRU on financial time-series; mean-reversion signals derived from
-            forecasted volatility. Sharpe-optimized backtesting with explicit
-            downside-volatility penalties.
+            PyTorch GRU network identifying overvalued securities — training on
+            time-series data to forecast downside volatility and price depreciation.
+            Engineers quantitative signals on mean reversion and statistical anomalies
+            to detect inefficiencies and optimize short-entry points. Backtesting and
+            validation optimized for Sharpe ratio while minimizing drawdown.
           </p>
           <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">PyTorch</span>
@@ -533,14 +561,170 @@
           <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
             <span class="font-mono text-fg">135.71%</span> cumulative return
             (<span class="font-mono text-fg">&gt;32%</span> annualized),
-            outperforming the S&amp;P 500 via a blend of fundamental and
-            technical analysis on a discretionary thesis-driven basis.
+            outperforming the S&amp;P 500. Discretionary trades on fundamental +
+            technical analysis with strict risk-reward ratios to manage volatility
+            and drawdown.
           </p>
           <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Equities</span>
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Fundamental analysis</span>
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Technical analysis</span>
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Risk management</span>
+          </div>
+        </article>
+
+        <!-- NDFEX HFT Competition -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Notre Dame &nbsp;·&nbsp; NDFEX Exchange Competition
+            </p>
+            <span class="font-mono text-[11px] text-muted">05</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            Multithreaded HFT Trading System
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            Architected a multithreaded engine with a <span class="font-mono text-fg">select()</span>-driven
+            TCP order-entry loop, a multicast market-data worker, and a ~2&nbsp;ms strategy
+            loop, synchronized with fine-grained locks. Implemented the full exchange wire
+            protocol from scratch (little-endian binary LOGIN/NEW/MODIFY/DELETE +
+            ACK/REJECT/FILL/CLOSE) with a client-side order-lifecycle state machine.
+            Built a two-layer risk system — generic risk gate (rate limiting, price bands,
+            exposure caps) and a competition rule controller enforcing hard position
+            limits and a PnL floor that no strategy path can bypass. Solved the order-book
+            cold-start via snapshot-replay → live handoff by sequence matching, modeled
+            ETF creation/redemption against a REST service, and validated everything with
+            8 pytest modules using deterministic fakes.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Python</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Multithreading</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">TCP / UDP multicast</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Risk systems</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">pytest</span>
+          </div>
+        </article>
+
+        <!-- ETF Arbitrage Research -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Notre Dame HFT Technologies &nbsp;·&nbsp; Research
+            </p>
+            <span class="font-mono text-[11px] text-muted">06</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            S&amp;P 500 ETF Arbitrage &amp; iNAV Research
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            End-to-end Python pipeline reconstructing intraday ETF fair value (iNAV) from
+            ~500 underlying constituents' NBBO quotes plus a cash/fund-flow term, across
+            five ETFs (SPY, IVV, VOO, and ±3× SPXL/SPXS) and
+            <span class="font-mono text-fg">50M+</span> WRDS/TAQ ticks per session in
+            columnar Parquet. Implemented size-weighted micro-price and a daily-reset
+            leveraged-iNAV model; quantified mispricing in basis points, AR(1)
+            mean-reversion half-lives (≈60–290&nbsp;ms), and lead-lag dynamics. Built a
+            latency-and-execution simulator across co-located (~22&nbsp;µs) → remote
+            (~1.6&nbsp;ms) tiers with fees + slippage, and ran event studies (FOMC,
+            April 2025 tariff shock). Key result: no episode cleared the magnitude +
+            duration bar to be net-profitable after costs — empirically demonstrating
+            S&amp;P 500 ETFs are efficiently arbitraged at sub-millisecond timescales.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Python · pandas · NumPy</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">WRDS / TAQ · NBBO</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">PyArrow / Parquet</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Market microstructure</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Latency modeling</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- EDUCATION -->
+  <section id="education" aria-labelledby="education-heading" class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-12 gap-x-8 gap-y-10">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 04 / Education</p>
+        <h2 id="education-heading" class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Academics.</h2>
+      </div>
+
+      <div class="lg:col-span-9 space-y-4">
+
+        <!-- Notre Dame -->
+        <article class="reveal card group border border-line p-6 sm:p-8 rounded-sm bg-bg">
+          <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-medium tracking-tight">
+                University of Notre Dame
+              </h3>
+              <p class="mt-1 text-fg/85">
+                B.S. Computer Science · Minor in Engineering Corporate Practice
+              </p>
+              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted">
+                GPA 3.76 / 4.0 &nbsp;·&nbsp; Dean's List (Spring 2023, Fall 2024)
+              </p>
+            </div>
+            <p class="font-mono text-xs uppercase tracking-widest text-muted">
+              Graduating May 2026
+            </p>
+          </header>
+
+          <div class="mt-6">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+              Selected Coursework
+            </p>
+            <div class="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-1.5 text-[0.95rem] text-fg/85">
+              <p class="flex justify-between gap-3"><span>High-Frequency Trading Techniques</span><span class="font-mono text-muted">A</span></p>
+              <p class="flex justify-between gap-3"><span>Intro to Artificial Intelligence</span><span class="font-mono text-muted">A</span></p>
+              <p class="flex justify-between gap-3"><span>Probability &amp; Statistics</span><span class="font-mono text-muted">A−</span></p>
+              <p class="flex justify-between gap-3"><span>Design / Analysis of Algorithms</span><span class="font-mono text-muted">A−</span></p>
+              <p class="flex justify-between gap-3"><span>Theory of Computing</span><span class="font-mono text-muted">A</span></p>
+              <p class="flex justify-between gap-3"><span>Data Structures</span><span class="font-mono text-muted">B+</span></p>
+              <p class="flex justify-between gap-3"><span>Computer Security</span><span class="font-mono text-muted">A</span></p>
+              <p class="flex justify-between gap-3"><span>Programming Paradigms</span><span class="font-mono text-muted">A</span></p>
+              <p class="flex justify-between gap-3"><span>Systems Programming</span><span class="font-mono text-muted">B+</span></p>
+              <p class="flex justify-between gap-3"><span>Computer Architecture</span><span class="font-mono text-muted">B+</span></p>
+              <p class="flex justify-between gap-3"><span>Computer Networks</span><span class="font-mono text-muted">B+</span></p>
+              <p class="flex justify-between gap-3"><span>Logic Design</span><span class="font-mono text-muted">B+</span></p>
+              <p class="flex justify-between gap-3"><span>Modern Web Development</span><span class="font-mono text-muted">A</span></p>
+              <p class="flex justify-between gap-3"><span>Fundamentals of Computing</span><span class="font-mono text-muted">A</span></p>
+              <p class="flex justify-between gap-3"><span>Foundations of Accountancy</span><span class="font-mono text-muted">A−</span></p>
+              <p class="flex justify-between gap-3"><span>Integrated EG &amp; Business Fundamentals</span><span class="font-mono text-muted">A</span></p>
+            </div>
+            <p class="mt-4 text-[0.9rem] text-fg/70 leading-relaxed">
+              Also: Operating System Principles, Discrete Mathematics, Principles of
+              Microeconomics, Idea Discovery Lab, Advanced Topics in Integrated EG &amp;
+              Business, and the full Calculus I–III / Linear Algebra &amp; Differential
+              Equations / Probability &amp; Statistics math foundation (some via transfer
+              from UC Berkeley, Seminole State, UConn).
+            </p>
+          </div>
+        </article>
+
+        <!-- Hopkins School -->
+        <article class="reveal card group border border-line p-6 sm:p-8 rounded-sm bg-bg">
+          <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-medium tracking-tight">
+                Hopkins School
+                <span class="text-muted font-light">— New Haven, CT</span>
+              </h3>
+              <p class="mt-1 font-mono text-xs uppercase tracking-widest text-muted">
+                GPA 4.59 &nbsp;·&nbsp; SAT 1520 &nbsp;·&nbsp; Quintile 1/5
+              </p>
+            </div>
+            <p class="font-mono text-xs uppercase tracking-widest text-muted">
+              Graduated Jun 2022
+            </p>
+          </header>
+          <div class="mt-5 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Valedictorian Finalist</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">AP Scholar with Distinction</span>
           </div>
         </article>
 
@@ -554,11 +738,11 @@
     <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-12 gap-x-8 gap-y-10">
 
       <div class="lg:col-span-3 reveal">
-        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 04 / Skills</p>
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 05 / Skills</p>
         <h2 id="skills-heading" class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Stack.</h2>
       </div>
 
-      <div class="lg:col-span-9 grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-x-8 gap-y-10 reveal">
+      <div class="lg:col-span-9 grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 reveal">
 
         <div>
           <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
@@ -566,43 +750,30 @@
           </h3>
           <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
             <li>Python</li>
-            <li>C++</li>
-            <li>C</li>
+            <li>C++ · C</li>
             <li>Rust</li>
-            <li>JavaScript</li>
             <li>SQL</li>
             <li>Java</li>
+            <li>JavaScript</li>
+            <li>PHP</li>
             <li>MATLAB</li>
+            <li>HTML / CSS</li>
           </ul>
         </div>
 
         <div>
           <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
-            AI / ML
+            ML / AI
           </h3>
           <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
             <li>PyTorch</li>
-            <li>TensorFlow</li>
-            <li>scikit-learn</li>
+            <li>TensorFlow · Keras</li>
             <li>pandas · NumPy</li>
+            <li>scikit-learn</li>
             <li>Anthropic SDK</li>
-            <li>RAG</li>
-            <li>Transformers</li>
-            <li>Adversarial robustness</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
-            Systems &amp; Security
-          </h3>
-          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
-            <li>Linux / Unix</li>
-            <li>Wireshark</li>
-            <li>Git</li>
-            <li>Shell</li>
-            <li>safetensors</li>
-            <li>Memory-safe Rust</li>
+            <li>OpenAI Codex</li>
+            <li>RAG · attention · fine-tuning</li>
+            <li>Model evaluation · bias analysis</li>
           </ul>
         </div>
 
@@ -612,12 +783,79 @@
           </h3>
           <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
             <li>Time-series forecasting</li>
-            <li>Sharpe optimization</li>
+            <li>Sharpe-ratio optimization</li>
+            <li>Mean reversion</li>
             <li>Statistical anomaly detection</li>
             <li>Backtesting</li>
+            <li>Limit Order Book / microstructure</li>
           </ul>
         </div>
 
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            Systems &amp; Security
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>Linux / Unix</li>
+            <li>Git · Shell scripting</li>
+            <li>DevOps pipelines</li>
+            <li>Wireshark</li>
+            <li>safetensors · serialization security</li>
+            <li>Adversarial attack detection</li>
+            <li>Memory-safe Rust</li>
+            <li>Qiskit</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            Tools
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>Advanced Excel</li>
+            <li>Copilot</li>
+            <li>GitHub / REST API integration</li>
+            <li>Agile</li>
+            <li>WRDS / TAQ</li>
+            <li>PyArrow / Parquet</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- INVOLVEMENT -->
+  <section id="involvement" aria-labelledby="involvement-heading" class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-12 gap-x-8 gap-y-10">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 06 / Involvement</p>
+        <h2 id="involvement-heading" class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Beyond the lab.</h2>
+      </div>
+
+      <div class="lg:col-span-9 reveal grid sm:grid-cols-2 gap-x-8 gap-y-8">
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            Activities
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>Quant Club of Notre Dame — Member (2022–2026)</li>
+            <li>Data Club of Notre Dame — Member (2022)</li>
+            <li>On-campus employment — CSE Dept.; Storytelling &amp; Engagement</li>
+            <li>Boxing Club — Member (2022)</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
+            Honors
+          </h3>
+          <ul class="mt-4 space-y-2 text-[0.95rem] text-fg/90">
+            <li>GPA 3.76 / 4.0</li>
+            <li>Dean's List — Spring 2023, Fall 2024</li>
+            <li>4 semesters undergraduate research (CSE 48901)</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -629,7 +867,7 @@
       <div class="reveal grid lg:grid-cols-12 gap-x-8 gap-y-10">
 
         <div class="lg:col-span-3">
-          <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 05 / Contact</p>
+          <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 07 / Contact</p>
         </div>
 
         <div class="lg:col-span-9">
@@ -650,6 +888,19 @@
                 <span class="flex items-center gap-4">
                   <span class="uppercase tracking-widest text-muted text-xs w-20">Email</span>
                   <span>ajcotaj@gmail.com</span>
+                </span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="7" y1="17" x2="17" y2="7"/>
+                  <polyline points="7 7 17 7 17 17"/>
+                </svg>
+              </a>
+            </li>
+            <li class="border-b border-line">
+              <a href="tel:+12035617076"
+                 class="cursor-pointer flex items-center justify-between py-4 hover:text-accent transition-colors duration-200">
+                <span class="flex items-center gap-4">
+                  <span class="uppercase tracking-widest text-muted text-xs w-20">Phone</span>
+                  <span>203-561-7076</span>
                 </span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line x1="7" y1="17" x2="17" y2="7"/>
