@@ -640,6 +640,71 @@
           </div>
         </article>
 
+        <!-- OCaml Matching Engine -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Independent &nbsp;·&nbsp; 2025 — 2026
+            </p>
+            <span class="font-mono text-[11px] text-muted">07</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            OCaml Matching Engine — Compile-Time-Verified Invariants
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            Exchange-side matching engine built around a pure state transition,
+            <span class="font-mono text-fg">apply : book → command → book × events</span>,
+            using OCaml's type system to make whole classes of bugs impossible to write.
+            GADT/phantom-typed order lifecycle and abstract types (hidden behind
+            <span class="font-mono text-fg">.mli</span> signatures) make a resting market
+            order or a negative price uncompilable. Price-ordered <span class="font-mono text-fg">Map</span>
+            book with FIFO levels and O(1) cached BBO; matching for limit, market, IOC,
+            FOK, and post-only orders by price-time priority. Correctness proven with a
+            <span class="font-mono text-fg">qcheck</span> property suite (share conservation,
+            no crossed book, FIFO, price-time priority, idempotent replay) plus a
+            deterministic replay harness and <span class="font-mono text-fg">core_bench</span>
+            latency benchmarks.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">OCaml · Dune</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Core / Base</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">qcheck (property testing)</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Type-driven design</span>
+          </div>
+        </article>
+
+        <!-- Market-Impact / Optimal Execution -->
+        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+          <header class="flex items-start justify-between gap-4">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Notre Dame HFT Technologies &nbsp;·&nbsp; Research
+            </p>
+            <span class="font-mono text-[11px] text-muted">08</span>
+          </header>
+          <h3 class="mt-4 text-xl font-medium tracking-tight">
+            Market-Impact &amp; Optimal-Execution Framework
+          </h3>
+          <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
+            Research framework measuring how trading size moves the market and what the
+            least-costly way to execute is. On a WRDS/TAQ pipeline with
+            <span class="font-mono text-fg">merge_asof</span> trade-to-quote alignment and
+            Lee-Ready trade-sign classification, fit empirical impact to the Almgren-Chriss
+            linear and square-root models with confidence intervals. Implemented the
+            Almgren-Chriss optimal-liquidation trajectory and swept risk-aversion to trace
+            the efficient frontier, then backtested TWAP / VWAP / Implementation-Shortfall
+            algos charging fitted impact + fees + spread and scoring realized shortfall.
+            A <span class="font-mono text-fg">lightgbm</span> impact model was evaluated
+            out-of-sample against the parametric baseline under purged time-series
+            cross-validation — an honest ML-vs-baseline comparison, not a bolt-on.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Python · SciPy · statsmodels</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Almgren-Chriss</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">lightgbm</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Optimal execution</span>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
