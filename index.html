@@ -12,6 +12,9 @@
 <meta property="og:description" content="CS at Notre Dame. Research on agentic AI safety, secure ML systems, and quantitative deep-learning." />
 <meta property="og:type" content="website" />
 
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="mask-icon" href="favicon.svg" color="#2563EB" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -142,13 +145,102 @@
 
   /* Project / experience cards */
   .card {
-    transition: border-color 220ms ease-out, background-color 220ms ease-out, transform 220ms ease-out;
+    transition: border-color 220ms ease-out, background-color 220ms ease-out,
+                transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease-out;
   }
   .card:hover {
     border-color: rgb(var(--fg) / 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px -16px rgb(var(--fg) / 0.28);
   }
   .dark .card:hover {
     border-color: rgb(var(--fg) / 0.4);
+    box-shadow: 0 14px 44px -18px rgb(0 0 0 / 0.7);
+  }
+  /* Animated accent underline that grows in under card headings on hover */
+  .card h3 { position: relative; }
+  .card h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.4rem;
+    height: 2px;
+    width: 0;
+    background: rgb(var(--accent));
+    transition: width 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card:hover h3::after { width: 2.25rem; }
+
+  /* Interactive coursework / tag chips */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid rgb(var(--line));
+    border-radius: 9999px;
+    color: rgb(var(--muted));
+    background: rgb(var(--bg));
+    cursor: default;
+    transition: color 200ms ease-out, border-color 200ms ease-out,
+                background-color 200ms ease-out, transform 200ms ease-out;
+  }
+  .chip:hover {
+    color: rgb(var(--accent));
+    border-color: rgb(var(--accent) / 0.55);
+    background: rgb(var(--accent) / 0.06);
+    transform: translateY(-2px);
+  }
+
+  /* Skill list items — subtle interactive slide */
+  #skills li {
+    width: fit-content;
+    cursor: default;
+    transition: color 180ms ease-out, transform 180ms ease-out;
+  }
+  #skills li:hover {
+    color: rgb(var(--fg));
+    transform: translateX(4px);
+  }
+  #skills li::before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 1px;
+    margin-right: 0;
+    vertical-align: middle;
+    background: rgb(var(--accent));
+    transition: width 200ms ease-out, margin-right 200ms ease-out;
+  }
+  #skills li:hover::before { width: 0.7rem; margin-right: 0.45rem; }
+
+  /* Active section in nav */
+  .nav-link.is-active {
+    color: rgb(var(--fg));
+    background-size: 100% 1px;
+  }
+
+  /* Hero ambient glow */
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-glow::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    width: 60rem;
+    height: 60rem;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgb(var(--accent) / 0.16), transparent 70%);
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    0%   { transform: translateX(-58%) translateY(-2%) scale(1); }
+    100% { transform: translateX(-42%) translateY(4%) scale(1.12); }
   }
 
   /* Respect reduced motion */
@@ -179,13 +271,13 @@
       <span aria-hidden="true">A.</span>Cotaj
     </a>
     <ul class="hidden md:flex items-center gap-7 font-mono text-xs uppercase tracking-widest text-muted">
-      <li><a href="#about"       class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">About</a></li>
-      <li><a href="#experience"  class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Work</a></li>
-      <li><a href="#projects"    class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Projects</a></li>
-      <li><a href="#education"   class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Education</a></li>
-      <li><a href="#skills"      class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Skills</a></li>
-      <li><a href="#involvement" class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Involvement</a></li>
-      <li><a href="#contact"     class="link-underline cursor-pointer hover:text-fg transition-colors duration-200">Contact</a></li>
+      <li><a href="#about"       class="nav-link link-underline cursor-pointer hover:text-fg transition-colors duration-200">About</a></li>
+      <li><a href="#experience"  class="nav-link link-underline cursor-pointer hover:text-fg transition-colors duration-200">Work</a></li>
+      <li><a href="#projects"    class="nav-link link-underline cursor-pointer hover:text-fg transition-colors duration-200">Projects</a></li>
+      <li><a href="#education"   class="nav-link link-underline cursor-pointer hover:text-fg transition-colors duration-200">Education</a></li>
+      <li><a href="#skills"      class="nav-link link-underline cursor-pointer hover:text-fg transition-colors duration-200">Skills</a></li>
+      <li><a href="#involvement" class="nav-link link-underline cursor-pointer hover:text-fg transition-colors duration-200">Involvement</a></li>
+      <li><a href="#contact"     class="nav-link link-underline cursor-pointer hover:text-fg transition-colors duration-200">Contact</a></li>
     </ul>
     <button id="theme-toggle" type="button"
             class="cursor-pointer h-9 w-9 grid place-items-center border border-line rounded-sm text-muted hover:text-fg hover:border-fg/40 transition-colors duration-200"
@@ -206,8 +298,9 @@
 <main id="main">
 
   <!-- HERO -->
-  <section id="top" aria-labelledby="hero-heading" class="border-b border-line">
-    <div class="mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
+  <section id="top" aria-labelledby="hero-heading" class="relative overflow-hidden border-b border-line">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-page px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
 
       <!-- Status -->
       <div class="reveal flex items-center gap-3 mb-10 sm:mb-14">
@@ -359,7 +452,7 @@
             <li class="flex gap-3">
               <span class="text-accent shrink-0 select-none" aria-hidden="true">→</span>
               <span>Increased team throughput by
-                <span class="font-mono text-fg">107%</span>;
+                <span class="font-mono text-fg js-count" data-to="107" data-suffix="%">107%</span>;
                 tool on track for company-wide implementation following a
                 cost-benefit analysis for deployment.</span>
             </li>
@@ -559,7 +652,7 @@
             Independent Equity Portfolio
           </h3>
           <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
-            <span class="font-mono text-fg">135.71%</span> cumulative return
+            <span class="font-mono text-fg js-count" data-to="135.71" data-decimals="2" data-suffix="%">135.71%</span> cumulative return
             (<span class="font-mono text-fg">&gt;32%</span> annualized),
             outperforming the S&amp;P 500. Discretionary trades on fundamental +
             technical analysis with strict risk-reward ratios to manage volatility
@@ -743,31 +836,30 @@
             <p class="font-mono text-[11px] uppercase tracking-widest text-muted pb-3 border-b border-line">
               Selected Coursework
             </p>
-            <div class="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-1.5 text-[0.95rem] text-fg/85">
-              <p class="flex justify-between gap-3"><span>High-Frequency Trading Techniques</span><span class="font-mono text-muted">A</span></p>
-              <p class="flex justify-between gap-3"><span>Intro to Artificial Intelligence</span><span class="font-mono text-muted">A</span></p>
-              <p class="flex justify-between gap-3"><span>Probability &amp; Statistics</span><span class="font-mono text-muted">A−</span></p>
-              <p class="flex justify-between gap-3"><span>Design / Analysis of Algorithms</span><span class="font-mono text-muted">A−</span></p>
-              <p class="flex justify-between gap-3"><span>Theory of Computing</span><span class="font-mono text-muted">A</span></p>
-              <p class="flex justify-between gap-3"><span>Data Structures</span><span class="font-mono text-muted">B+</span></p>
-              <p class="flex justify-between gap-3"><span>Computer Security</span><span class="font-mono text-muted">A</span></p>
-              <p class="flex justify-between gap-3"><span>Programming Paradigms</span><span class="font-mono text-muted">A</span></p>
-              <p class="flex justify-between gap-3"><span>Systems Programming</span><span class="font-mono text-muted">B+</span></p>
-              <p class="flex justify-between gap-3"><span>Computer Architecture</span><span class="font-mono text-muted">B+</span></p>
-              <p class="flex justify-between gap-3"><span>Computer Networks</span><span class="font-mono text-muted">B+</span></p>
-              <p class="flex justify-between gap-3"><span>Logic Design</span><span class="font-mono text-muted">B+</span></p>
-              <p class="flex justify-between gap-3"><span>Modern Web Development</span><span class="font-mono text-muted">A</span></p>
-              <p class="flex justify-between gap-3"><span>Fundamentals of Computing</span><span class="font-mono text-muted">A</span></p>
-              <p class="flex justify-between gap-3"><span>Foundations of Accountancy</span><span class="font-mono text-muted">A−</span></p>
-              <p class="flex justify-between gap-3"><span>Integrated EG &amp; Business Fundamentals</span><span class="font-mono text-muted">A</span></p>
-            </div>
-            <p class="mt-4 text-[0.9rem] text-fg/70 leading-relaxed">
-              Also: Operating System Principles, Discrete Mathematics, Principles of
-              Microeconomics, Idea Discovery Lab, Advanced Topics in Integrated EG &amp;
-              Business, and the full Calculus I–III / Linear Algebra &amp; Differential
-              Equations / Probability &amp; Statistics math foundation (some via transfer
-              from UC Berkeley, Seminole State, UConn).
-            </p>
+            <ul class="mt-4 flex flex-wrap gap-2 text-[0.9rem]">
+              <li class="chip">High-Frequency Trading Techniques</li>
+              <li class="chip">Intro to Artificial Intelligence</li>
+              <li class="chip">Probability &amp; Statistics</li>
+              <li class="chip">Design / Analysis of Algorithms</li>
+              <li class="chip">Theory of Computing</li>
+              <li class="chip">Data Structures</li>
+              <li class="chip">Computer Security</li>
+              <li class="chip">Programming Paradigms</li>
+              <li class="chip">Systems Programming</li>
+              <li class="chip">Computer Architecture</li>
+              <li class="chip">Computer Networks</li>
+              <li class="chip">Operating System Principles</li>
+              <li class="chip">Logic Design</li>
+              <li class="chip">Modern Web Development</li>
+              <li class="chip">Fundamentals of Computing</li>
+              <li class="chip">Discrete Mathematics</li>
+              <li class="chip">Calculus I–III</li>
+              <li class="chip">Linear Algebra &amp; Differential Equations</li>
+              <li class="chip">Foundations of Accountancy</li>
+              <li class="chip">Principles of Microeconomics</li>
+              <li class="chip">Integrated EG &amp; Business Fundamentals</li>
+              <li class="chip">Idea Discovery Lab</li>
+            </ul>
           </div>
         </article>
 
@@ -1043,6 +1135,61 @@
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     els.forEach(function (el) { io.observe(el); });
+  })();
+
+  // Scroll-spy — highlight the nav link for the section in view
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    var map = {};
+    links.forEach(function (l) {
+      var id = l.getAttribute('href').slice(1);
+      if (id) map[id] = l;
+    });
+    var sections = Object.keys(map)
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        links.forEach(function (l) { l.classList.remove('is-active'); });
+        var active = map[entry.target.id];
+        if (active) active.classList.add('is-active');
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function (s) { spy.observe(s); });
+  })();
+
+  // Count-up — animate metric numbers when they scroll into view
+  (function () {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var nums = document.querySelectorAll('.js-count');
+    function format(el, v) {
+      var d = parseInt(el.dataset.decimals || '0', 10);
+      return (el.dataset.prefix || '') + v.toFixed(d) + (el.dataset.suffix || '');
+    }
+    if (reduced || !('IntersectionObserver' in window)) {
+      nums.forEach(function (el) { el.textContent = format(el, parseFloat(el.dataset.to)); });
+      return;
+    }
+    function run(el) {
+      var to = parseFloat(el.dataset.to);
+      var dur = 1100, start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        el.textContent = format(el, to * eased);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { run(entry.target); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.6 });
+    nums.forEach(function (el) { io.observe(el); });
   })();
 
   // Year
