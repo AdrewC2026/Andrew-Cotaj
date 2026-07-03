@@ -29,6 +29,15 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Anchored sections stop below the sticky header */
+section[id], h2[id], h3[id] { scroll-margin-top: 4rem; }
+
+/* Balanced headline wrapping */
+h1, h2, h3 { text-wrap: balance; }
+
+/* Metric digits keep a fixed width */
+.js-count, .stat .v { font-variant-numeric: tabular-nums; }
+
 :focus-visible {
   outline: 2px solid rgb(var(--accent));
   outline-offset: 3px;
@@ -77,8 +86,23 @@ body {
 
 /* Cards */
 .card {
+  position: relative;
   transition: border-color 220ms ease-out, background-color 220ms ease-out,
               transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease-out;
+}
+/* Cursor-tracking spotlight (pointer devices only) */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 260ms ease-out;
+  background: radial-gradient(22rem circle at var(--mx, 50%) var(--my, 50%),
+              rgb(var(--accent) / 0.08), transparent 65%);
+}
+@media (hover: hover) and (pointer: fine) {
+  .card:hover::after { opacity: 1; }
 }
 .card:hover {
   border-color: rgb(var(--fg) / 0.4);
@@ -251,4 +275,5 @@ figcaption b { color: rgb(var(--fg) / 0.8); font-weight: 600; }
   }
   .reveal { opacity: 1; transform: none; }
   .status-dot::after { display: none; }
+  .card::after { display: none; }
 }

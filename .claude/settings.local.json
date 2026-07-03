@@ -7,7 +7,10 @@
       "Bash(git add *)",
       "Bash(git restore *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "PowerShell(python --version)",
+      "PowerShell(python \"C:\\\\Users\\\\ajcot\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"quant trading fintech ML engineer portfolio minimal dark sleek\" --design-system -p \"Andrew Cotaj Portfolio\" -f markdown)",
+      "PowerShell(python \"C:\\\\Users\\\\ajcot\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\src\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"quant trading fintech ML engineer portfolio minimal dark sleek\" --design-system -f markdown)"
     ]
   }
 }

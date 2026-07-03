@@ -31,6 +31,44 @@
   els.forEach(function (el) { io.observe(el); });
 })();
 
+// Card spotlight — track cursor position for the radial highlight
+(function () {
+  if (window.matchMedia('(hover: none)').matches) return;
+  document.querySelectorAll('.card').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+})();
+
+// Reading progress bar — injected into the sticky header
+(function () {
+  var header = document.querySelector('header');
+  if (!header) return;
+  var bar = document.createElement('div');
+  bar.setAttribute('aria-hidden', 'true');
+  bar.style.cssText =
+    'position:absolute;left:0;right:0;bottom:-1px;height:2px;' +
+    'background:rgb(var(--accent));transform-origin:0 50%;transform:scaleX(0);';
+  header.appendChild(bar);
+  var ticking = false;
+  function update() {
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+    bar.style.transform = 'scaleX(' + p + ')';
+    ticking = false;
+  }
+  function onScroll() {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+})();
+
 // Year
 (function () {
   var y = document.getElementById('year');
