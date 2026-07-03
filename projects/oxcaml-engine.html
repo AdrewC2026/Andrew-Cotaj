@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OxCaml Matching Engine — Andrew Cotaj</title>
+<meta name="description" content="A limit-order-book matching engine in OxCaml: illegal order states don't typecheck, the matching hot path allocates zero bytes, and the concurrent order path is data-race-free by construction. Verified in CI against Jane Street's compiler." />
+<meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#09090B" media="(prefers-color-scheme: dark)" />
+<meta property="og:title" content="OxCaml Matching Engine — compile-time invariants, mode-safe execution" />
+<meta property="og:description" content="Type-safe matching engine with a zero-allocation hot path and a data-race-free concurrent gateway, built in OxCaml and green in CI against Jane Street's compiler." />
+<meta property="og:type" content="article" />
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="mask-icon" href="../favicon.svg" color="#2563EB" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var dark = stored ? stored === 'dark' : prefersDark;
+      if (dark) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  })();
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          bg: 'rgb(var(--bg) / <alpha-value>)', fg: 'rgb(var(--fg) / <alpha-value>)',
+          muted: 'rgb(var(--muted) / <alpha-value>)', subtle: 'rgb(var(--subtle) / <alpha-value>)',
+          line: 'rgb(var(--line) / <alpha-value>)', accent: 'rgb(var(--accent) / <alpha-value>)',
+          ok: 'rgb(var(--ok) / <alpha-value>)',
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        },
+        letterSpacing: { tightest: '-0.04em' },
+        maxWidth: { page: '72rem' },
+      },
+    },
+  };
+</script>
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body class="bg-bg text-fg font-sans antialiased">
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-bg focus:text-fg focus:border focus:border-line focus:px-3 focus:py-2 focus:font-mono focus:text-xs">Skip to content</a>
+
+<!-- Header -->
+<header class="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
+  <nav class="mx-auto max-w-page px-5 sm:px-8 h-14 flex items-center justify-between" aria-label="Primary">
+    <a href="../index.html" class="font-mono text-sm tracking-tight hover:text-accent transition-colors duration-200">
+      <span aria-hidden="true">A.</span>Cotaj
+    </a>
+    <p class="hidden sm:block font-mono text-[11px] uppercase tracking-widest text-muted">
+      <a href="../index.html#projects" class="link-underline hover:text-fg transition-colors">Projects</a>
+      <span class="mx-2 text-line">/</span> OxCaml Matching Engine
+    </p>
+    <button id="theme-toggle" type="button" class="h-9 w-9 grid place-items-center border border-line rounded-sm text-muted hover:text-fg hover:border-fg/40 transition-colors duration-200" aria-label="Toggle color theme">
+      <svg class="hidden dark:block" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg class="block dark:hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-24">
+      <div class="reveal flex items-center gap-3 mb-8">
+        <span class="status-dot inline-block h-1.5 w-1.5 rounded-full bg-ok" aria-hidden="true"></span>
+        <span class="font-mono text-xs uppercase tracking-widest text-muted">Independent &nbsp;·&nbsp; OxCaml &nbsp;·&nbsp; 2025 – 2026 &nbsp;·&nbsp; CI green</span>
+      </div>
+
+      <h1 class="reveal font-light tracking-tightest leading-[0.98] text-[clamp(2.25rem,6.5vw,4.75rem)] max-w-4xl">
+        OxCaml Matching Engine
+      </h1>
+      <p class="reveal mt-6 text-lg sm:text-xl text-muted max-w-3xl leading-snug">
+        <span class="text-fg">Compile-time-verified order invariants, mode-safe low-latency execution.</span>
+        A limit-order-book matching engine where illegal order states don't typecheck, the
+        matching hot path allocates <span class="text-fg">zero bytes</span>, and the concurrent
+        order path is <span class="text-fg">data-race-free by construction</span> — in OxCaml,
+        Jane Street's production compiler.
+      </p>
+
+      <!-- headline metrics -->
+      <dl class="reveal mt-12 grid grid-cols-2 sm:grid-cols-4 gap-y-6 gap-x-8 border-t border-line pt-8 font-mono text-xs">
+        <div><dt class="uppercase tracking-widest text-muted">Hot path</dt><dd class="mt-1 stat text-fg"><span class="v">0</span> bytes / match</dd></div>
+        <div><dt class="uppercase tracking-widest text-muted">GC tail</dt><dd class="mt-1 stat text-fg"><span class="v">0</span> minor collections</dd></div>
+        <div><dt class="uppercase tracking-widest text-muted">Gateway</dt><dd class="mt-1 stat text-fg">~<span class="v">2.6M</span> orders / s</dd></div>
+        <div><dt class="uppercase tracking-widest text-muted">Invariants</dt><dd class="mt-1 stat text-fg"><span class="v">7</span>/7 properties</dd></div>
+      </dl>
+
+      <div class="reveal mt-10 flex flex-wrap gap-3">
+        <a href="https://github.com/AdrewC2026/oxcaml-order-invariant-engine" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 h-11 bg-fg text-bg font-medium text-sm rounded-sm hover:bg-accent transition-colors duration-200">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.93c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.74-1.56-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.3 1.18-3.1-.12-.3-.51-1.48.11-3.07 0 0 .96-.31 3.16 1.18a10.94 10.94 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.59.23 2.77.11 3.07.74.8 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.26 5.69.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+          View repository
+        </a>
+        <a href="https://github.com/AdrewC2026/oxcaml-order-invariant-engine/actions" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 h-11 border border-line text-fg font-medium text-sm rounded-sm hover:border-fg/50 transition-colors duration-200">CI &amp; benchmark logs</a>
+        <a href="../index.html#projects" class="inline-flex items-center gap-2 px-4 h-11 border border-line text-fg font-medium text-sm rounded-sm hover:border-fg/50 transition-colors duration-200">← All projects</a>
+      </div>
+
+      <div class="reveal mt-8 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
+        <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">OCaml · OxCaml</span>
+        <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Dune</span>
+        <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">GADTs · phantom types</span>
+        <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Modes: local / portable / contended</span>
+        <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">qcheck</span>
+        <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">OCaml 5 multicore</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- § 01 THE IDEA -->
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20 grid lg:grid-cols-12 gap-x-8 gap-y-8">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 01 / The idea</p>
+      </div>
+      <div class="lg:col-span-9 reveal">
+        <h2 class="text-2xl sm:text-3xl font-medium tracking-tight max-w-2xl">A matching engine is a pure state-transition function.</h2>
+        <div class="prose mt-6">
+          <p>
+            This is the <strong>exchange side</strong>, not a trading bot: the engine receives
+            order commands, maintains the limit order book, matches crossing orders by
+            <strong>price-time priority</strong>, and emits executions. Everything is organised
+            around one pure function:
+          </p>
+        </div>
+        <pre class="codeblock mt-5 max-w-2xl">apply : book -&gt; command -&gt; book * events</pre>
+        <div class="prose mt-5">
+          <p>
+            Purity gives deterministic replay for free; totality is enforced by exhaustive
+            pattern matching over every command and order type; invariant preservation is what
+            the property tests check after <em>every</em> application. OxCaml — Jane Street's
+            production compiler fork of OCaml — then makes the same logic fast and
+            concurrency-safe through <strong>modes</strong>, without dropping into C.
+          </p>
+          <p>
+            The engine is built <strong>vanilla-first</strong>: a correct, idiomatic plain-OCaml
+            version is tagged (<code>v1-vanilla</code>) before any OxCaml extension is added, so
+            the <code>v1-vanilla → HEAD</code> diff <em>is</em> the evidence of the mode work,
+            and every performance claim is a measured number rather than an assertion.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- § 02 ILLEGAL STATES -->
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20 grid lg:grid-cols-12 gap-x-8 gap-y-8">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 02 / Type safety</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Illegal states don't typecheck.</h2>
+      </div>
+      <div class="lg:col-span-9 space-y-10">
+
+        <div class="reveal">
+          <h3 class="text-lg font-medium tracking-tight">1 · Abstract types + validating smart constructors</h3>
+          <div class="prose mt-3">
+            <p>A <code>Price.t</code> is provably <code>≥ 0</code> and a <code>Qty.t</code> provably <code>&gt; 0</code>, because those are the <em>only</em> constructors and they validate. No module downstream ever needs a defensive check.</p>
+          </div>
+          <pre class="codeblock mt-4">module Price : sig
+  <span class="k">type</span> t : immutable_data          <span class="c">(* abstract — no raw constructor escapes *)</span>
+  <span class="k">val</span> of_int : int -&gt; t option    <span class="c">(* Some iff n &gt;= 0 *)</span>
+<span class="k">end</span></pre>
+        </div>
+
+        <div class="reveal">
+          <h3 class="text-lg font-medium tracking-tight">2 · A GADT order lifecycle</h3>
+          <div class="prose mt-3">
+            <p>The two states carry <em>different payloads</em> — <code>Filled</code> has no <code>remaining</code> field at all:</p>
+          </div>
+          <pre class="codeblock mt-4"><span class="k">type</span> _ t =
+  | Active : { id; side; price; remaining : Qty.t; seq : int } -&gt; active t
+  | Filled : { id; side; price;                    seq : int } -&gt; filled t
+
+<span class="k">val</span> remaining : active t -&gt; Qty.t     <span class="c">(* a filled order has no remaining to read *)</span>
+<span class="k">val</span> fill : active t -&gt; Qty.t -&gt; [ `Partial <span class="k">of</span> active t | `Filled <span class="k">of</span> filled t ]</pre>
+          <div class="callout mt-4">
+            <p class="text-sm"><b class="text-fg font-semibold">Forbids —</b> reading the remaining quantity of a filled order, and re-filling a filled order. Both are compile errors, not runtime checks: <code>fill</code> consumes the <code>active</code> order and returns a fresh value.</p>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="text-lg font-medium tracking-tight">3 · Polymorphic-variant time-in-force rows</h3>
+          <div class="prose mt-3">
+            <p>A market order's TIF row omits <code>`Gtc</code> / <code>`Post_only</code>, and <code>Market</code> has no <code>price</code> field:</p>
+          </div>
+          <pre class="codeblock mt-4"><span class="k">type</span> kind =
+  | Limit  <span class="k">of</span> { price : Price.t; tif : [ `Gtc | `Ioc | `Fok | `Post_only ] }
+  | Market <span class="k">of</span> {                  tif : [ `Ioc | `Fok ] }   <span class="c">(* no price, no Gtc *)</span></pre>
+          <div class="callout mt-4">
+            <p class="text-sm"><b class="text-fg font-semibold">Forbids —</b> a <em>resting market order</em> and a <em>post-only market order</em> are unrepresentable: you cannot pass <code>`Gtc</code> where a market TIF is expected, and a market order has no price to rest at.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- § 03 THE ENGINE -->
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20 grid lg:grid-cols-12 gap-x-8 gap-y-8">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 03 / The engine</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Book, matching, and the invariants.</h2>
+      </div>
+      <div class="lg:col-span-9 space-y-8">
+        <div class="prose reveal">
+          <p>
+            The <strong>book</strong> is two price-keyed <code>Map</code>s (O(log n) best-price
+            access), each level a FIFO functional queue; time priority is <em>structural</em> —
+            a monotonic sequence number plus append-at-back. <strong>Matching</strong> walks the
+            opposite side best-price-first and handles <strong>limit, market, IOC, FOK (with a
+            pre-check pass), and post-only</strong>, executing at the resting (maker) price.
+            Because <code>apply</code> is pure, a text command stream replays to byte-identical
+            output.
+          </p>
+          <p>
+            Correctness is a <strong>qcheck</strong> property suite that asserts five invariants
+            after <em>every</em> step across thousands of randomised command streams:
+          </p>
+        </div>
+
+        <div class="reveal overflow-x-auto border border-line rounded-sm">
+          <table class="data-table">
+            <thead><tr><th>Invariant</th><th>Statement checked after every command</th></tr></thead>
+            <tbody>
+              <tr><td>Share conservation</td><td><code>submitted = resting + cancelled + 2 × filled</code></td></tr>
+              <tr><td>No crossed book</td><td><code>best_bid &lt; best_ask</code> whenever both exist</td></tr>
+              <tr><td>FIFO within a level</td><td>sequence numbers strictly increase front-to-back</td></tr>
+              <tr><td>Price-time priority</td><td>a taker's fills walk prices best-first</td></tr>
+              <tr><td>Deterministic replay</td><td>the same stream twice → identical book &amp; events</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="reveal font-mono text-xs text-muted">
+          Result: <span class="text-ok">7 / 7 properties pass</span> (5 invariants + 2 smart-constructor round-trips, 2000 streams each) and <span class="text-ok">16 / 16 hand-written regressions pass</span> — on both the vanilla and OxCaml switches.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- § 04 CORE 1 -->
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20 grid lg:grid-cols-12 gap-x-8 gap-y-8">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 04 / OxCaml · core 1</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">A zero-allocation hot path.</h2>
+      </div>
+      <div class="lg:col-span-9 space-y-6">
+        <div class="prose reveal">
+          <p>
+            In vanilla OCaml, every intermediate fill event, updated order record, and list cons
+            in the matching loop allocates and feeds the GC. OxCaml's <strong><code>local</code>
+            mode</strong> keeps that data on the stack. Over a flat, cache-friendly price level,
+            the <em>only</em> thing that could allocate is the per-fill datum — and
+            <code>@ local</code> / <code>stack_</code> put it on the stack:
+          </p>
+        </div>
+        <pre class="codeblock reveal"><span class="k">val</span> match_sweep_local :
+  level -&gt; price:int -&gt; taker_qty:int -&gt; on_fill:(fill @ <span class="k">local</span> -&gt; unit) -&gt; int
+<span class="c">(* each fill is `stack_`-allocated and handed to on_fill as `@ local`, so it</span>
+<span class="c">   cannot escape onto the heap. Drop the `@ local` and the records heap-allocate. *)</span></pre>
+        <div class="reveal overflow-x-auto border border-line rounded-sm">
+          <table class="data-table">
+            <thead><tr><th>Variant · 2,000,000 matches</th><th class="num">bytes / match</th><th class="num">minor GCs</th><th class="num">ns / match</th></tr></thead>
+            <tbody>
+              <tr><td>boxed (heap)</td><td class="num">32.0</td><td class="num">7</td><td class="num">5.9</td></tr>
+              <tr><td><span class="hi">local (<code>stack_</code>)</span></td><td class="num"><span class="good">0.0</span></td><td class="num"><span class="good">0</span></td><td class="num">6.9</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="reveal font-mono text-xs text-muted">Identical work (checksums match); only the annotation differs. Zero allocation ⇒ zero minor collections ⇒ no GC tail on the hottest path in the system.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- § 05 CORE 2 -->
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20 grid lg:grid-cols-12 gap-x-8 gap-y-8">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 05 / OxCaml · core 2</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">A data race is a compile error.</h2>
+      </div>
+      <div class="lg:col-span-9 space-y-6">
+        <div class="prose reveal">
+          <p>
+            A multi-domain order-entry gateway feeds a single matching domain. OxCaml's
+            <strong>portability / contention modes</strong> make "no data race on the book" a
+            compile-time guarantee. Commands cross domain boundaries as <code>@ portable</code>
+            values <em>with no cast</em>, because their leaf types carry <code>: immutable_data</code>
+            kinds; the mutable book is created inside the matching domain and never crosses a
+            boundary:
+          </p>
+        </div>
+        <pre class="codeblock reveal"><span class="k">type</span> t : value mod portable contended        <span class="c">(* the cross-domain hand-off *)</span>
+<span class="k">val</span> submit : t -&gt; command @ portable -&gt; unit @@ portable   <span class="c">(* any domain *)</span>
+<span class="k">val</span> run    : t -&gt; int Domain.t                          <span class="c">(* the one writer *)</span></pre>
+        <div class="prose reveal">
+          <p>The proof is a <em>rejected</em> program — sharing one mutable <code>Book.t ref</code> across two domains:</p>
+        </div>
+        <pre class="codeblock reveal"><span class="err">Error</span>: The value "book" is "nonportable" but is expected to be "portable"
+       because it is used inside the function ... which is expected to be "portable".</pre>
+        <p class="reveal font-mono text-xs text-muted">Measured throughput of the accepted gateway: <span class="text-fg">~2.6–2.9 M orders / sec</span> (4 producer domains → 1 matching domain). "This does not compile, here is the error" is the strongest evidence for data-race-freedom by construction.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- § 06 RESULTS / CI -->
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20 grid lg:grid-cols-12 gap-x-8 gap-y-8">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 06 / Results</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">Green in CI, against the real compiler.</h2>
+      </div>
+      <div class="lg:col-span-9 space-y-6">
+        <div class="prose reveal">
+          <p>
+            Continuous integration runs two jobs: a <strong>vanilla</strong> job that builds the
+            plain-OCaml baseline at the <code>v1-vanilla</code> tag on stock OCaml 5.2.1, and an
+            <strong>oxcaml</strong> job that <em>builds the OxCaml compiler from source</em>
+            (~32 min, cached) and then builds, tests, and benchmarks the mode-annotated layer on
+            the pinned <code>5.2.0+ox</code> switch. Both are green, and the benchmark numbers are
+            printed into the public CI log — third-party-reproducible evidence, not screenshots.
+          </p>
+        </div>
+        <div class="reveal grid sm:grid-cols-3 gap-px bg-line border border-line rounded-sm overflow-hidden">
+          <div class="bg-bg p-5"><p class="font-mono text-[11px] uppercase tracking-widest text-muted">Correctness</p><p class="mt-2 text-2xl font-light tracking-tight">23<span class="text-muted text-lg"> / 23</span></p><p class="mt-1 text-sm text-muted">qcheck properties + regressions green</p></div>
+          <div class="bg-bg p-5"><p class="font-mono text-[11px] uppercase tracking-widest text-muted">Hot path</p><p class="mt-2 text-2xl font-light tracking-tight">0 <span class="text-muted text-lg">bytes</span></p><p class="mt-1 text-sm text-muted">per match · 0 minor GCs</p></div>
+          <div class="bg-bg p-5"><p class="font-mono text-[11px] uppercase tracking-widest text-muted">Concurrency</p><p class="mt-2 text-2xl font-light tracking-tight">race-free</p><p class="mt-1 text-sm text-muted">proven by a compile error</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- § 07 HONESTY -->
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20 grid lg:grid-cols-12 gap-x-8 gap-y-8">
+      <div class="lg:col-span-3 reveal">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">§ 07 / Honest engineering</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl font-medium tracking-tight">What's real, and what's a trade-off.</h2>
+      </div>
+      <div class="lg:col-span-9 space-y-4">
+        <div class="callout warn reveal">
+          <p class="text-sm"><b class="text-fg font-semibold">The four casts.</b> The gateway uses exactly four <code>%identity</code> mode casts, audited individually, only for facts the deliberately-un-kinded engine hides: that <code>Book.t</code> is deeply immutable (the empty seed) and that <code>Matching.apply</code> / <code>Book.total_shares</code> are pure. The concurrency mechanism itself — the portable closure, the command hand-off, the shared atomics — uses <em>no</em> casts.</p>
+        </div>
+        <div class="callout warn reveal">
+          <p class="text-sm"><b class="text-fg font-semibold">Scoped to two extensions.</b> Allocation control and mode-based race freedom, understood completely, over feature breadth. Unboxed <code>int64#</code> layouts were <em>not</em> pursued — an extension without a measured number is left out rather than decorated in.</p>
+        </div>
+        <div class="callout warn reveal">
+          <p class="text-sm"><b class="text-fg font-semibold">HEAD targets OxCaml.</b> The <code>: immutable_data</code> kinds live in the engine, so <code>HEAD</code> requires the <code>5.2.0+ox</code> switch; the standalone plain-OCaml guarantee is preserved at the <code>v1-vanilla</code> tag. Every annotation in the repo is paired with a "why it typechecks / what escapes if you remove it" comment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="mx-auto max-w-page px-5 sm:px-8 py-16 sm:py-20">
+      <div class="reveal flex flex-wrap items-center justify-between gap-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-medium tracking-tight">Read the code and the benchmark logs.</h2>
+          <p class="mt-2 text-muted max-w-xl">The README states the invariants in plain English, shows each snippet with a "what it forbids" comment, and reports the measured numbers and the cast audit.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="https://github.com/AdrewC2026/oxcaml-order-invariant-engine" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 h-11 bg-fg text-bg font-medium text-sm rounded-sm hover:bg-accent transition-colors duration-200">Repository</a>
+          <a href="market-impact.html" class="inline-flex items-center gap-2 px-4 h-11 border border-line text-fg font-medium text-sm rounded-sm hover:border-fg/50 transition-colors duration-200">Next: Market-Impact research →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-line">
+  <div class="mx-auto max-w-page px-5 sm:px-8 py-8 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-widest text-muted">
+    <p>© <span id="year">2026</span> &nbsp;·&nbsp; Andrew Cotaj</p>
+    <p><a href="../index.html" class="link-underline hover:text-fg transition-colors">andrew-cotaj</a> &nbsp;·&nbsp; Case study</p>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+</body>
+</html>

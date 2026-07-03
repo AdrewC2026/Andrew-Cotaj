@@ -734,41 +734,47 @@
           </div>
         </article>
 
-        <!-- OCaml Matching Engine -->
-        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+        <!-- OxCaml Matching Engine -->
+        <article class="reveal card relative bg-bg p-6 sm:p-8 flex flex-col">
           <header class="flex items-start justify-between gap-4">
             <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
-              Independent &nbsp;·&nbsp; 2025 — 2026
+              Independent &nbsp;·&nbsp; OxCaml &nbsp;·&nbsp; 2025 — 2026
             </p>
             <span class="font-mono text-[11px] text-muted">07</span>
           </header>
           <h3 class="mt-4 text-xl font-medium tracking-tight">
-            OCaml Matching Engine — Compile-Time-Verified Invariants
+            OxCaml Matching Engine — Compile-Time Invariants, Mode-Safe Execution
           </h3>
           <p class="mt-3 text-fg/80 leading-relaxed text-[0.95rem] flex-1">
-            Exchange-side matching engine built around a pure state transition,
-            <span class="font-mono text-fg">apply : book → command → book × events</span>,
-            using OCaml's type system to make whole classes of bugs impossible to write.
-            GADT/phantom-typed order lifecycle and abstract types (hidden behind
-            <span class="font-mono text-fg">.mli</span> signatures) make a resting market
-            order or a negative price uncompilable. Price-ordered <span class="font-mono text-fg">Map</span>
-            book with FIFO levels and O(1) cached BBO; matching for limit, market, IOC,
-            FOK, and post-only orders by price-time priority. Correctness proven with a
-            <span class="font-mono text-fg">qcheck</span> property suite (share conservation,
-            no crossed book, FIFO, price-time priority, idempotent replay) plus a
-            deterministic replay harness and <span class="font-mono text-fg">core_bench</span>
-            latency benchmarks.
+            Exchange-side limit-order-book engine built around a pure state transition,
+            <span class="font-mono text-fg">apply : book → command → book × events</span>. A
+            GADT/phantom-typed order lifecycle and abstract types (behind
+            <span class="font-mono text-fg">.mli</span> signatures) make a resting market order
+            or a negative price uncompilable. In <span class="font-mono text-fg">OxCaml</span> —
+            Jane Street's compiler — the matching hot path is made allocation-free with the
+            <span class="font-mono text-fg">local</span> mode
+            (<span class="font-mono text-fg">0 bytes/match</span>, no GC tail), and a multi-domain
+            order gateway is <span class="text-fg">data-race-free by construction</span> via
+            portability/contention modes — a shared mutable book is a <em class="not-italic text-fg">compile error</em>.
+            Correctness: a <span class="font-mono text-fg">qcheck</span> suite (share conservation,
+            no crossed book, FIFO, price-time priority, deterministic replay). Green in CI against
+            the OxCaml compiler.
           </p>
           <div class="mt-6 flex flex-wrap gap-1.5 font-mono text-[11px] tracking-wide">
-            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">OCaml · Dune</span>
-            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Core / Base</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">OCaml · OxCaml · Dune</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">GADTs · phantom types</span>
+            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">local · portability modes</span>
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">qcheck (property testing)</span>
-            <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Type-driven design</span>
           </div>
+          <a href="projects/oxcaml-engine.html"
+             class="mt-6 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-accent transition-all duration-200 hover:gap-2.5 after:absolute after:inset-0 after:content-['']">
+            Read case study
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
         </article>
 
         <!-- Market-Impact / Optimal Execution -->
-        <article class="reveal card bg-bg p-6 sm:p-8 flex flex-col">
+        <article class="reveal card relative bg-bg p-6 sm:p-8 flex flex-col">
           <header class="flex items-start justify-between gap-4">
             <p class="font-mono text-[11px] uppercase tracking-widest text-muted">
               Notre Dame HFT Technologies &nbsp;·&nbsp; Research
@@ -797,6 +803,11 @@
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">lightgbm</span>
             <span class="px-2 py-0.5 bg-subtle text-muted rounded-sm">Optimal execution</span>
           </div>
+          <a href="projects/market-impact.html"
+             class="mt-6 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-accent transition-all duration-200 hover:gap-2.5 after:absolute after:inset-0 after:content-['']">
+            Read case study
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
         </article>
 
       </div>
